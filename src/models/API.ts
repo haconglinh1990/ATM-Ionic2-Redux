@@ -46,7 +46,7 @@ export interface Result {
   id: string;
   name: string;
   opening_hours: OpeningHours;
-  photos: Photo[];
+  photos?: Photo[];
   place_id: string;
   reference: string;
   scope: string;

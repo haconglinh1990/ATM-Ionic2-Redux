@@ -5,7 +5,7 @@ import {Injectable} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import {Observable} from "rxjs";
 import {NavController} from "ionic-angular";
-import {BASE_API} from "../ultils/Constant";
+// import {BASE_API} from "../ultils/Constant";
 import {RootObject} from "../models/API";
 
 @Injectable()
@@ -17,7 +17,7 @@ export class ATMService{
 
   public getListATM():Observable<RootObject>{
 
-    let url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=21.0280149,105.776591&radius=5000&type=atm&key=AIzaSyAnsboAkwpEceSlixe4JrGKEOlhhWw1iTo";
+    let url = "https://map.googleapis.com/map/api/place/nearbysearch/json?location=21.0280149,105.776591&radius=5000&type=atm&key=AIzaSyAnsboAkwpEceSlixe4JrGKEOlhhWw1iTo";
 
     return this._http.get(url)
       .map((response: Response) => <RootObject> response.json())

@@ -14,3 +14,27 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+.header{
+  position: relative;
+  margin: auto;
+  text-align: center;
+  background-color: #2ecc71;
+}
+.list_action img{
+  max-height: 50px;
+  max-width: 50px;
+}
+
+#mapIcon{
+  border-radius: 0px ;
+}
+
+.list_action h2{
+  font-weight: bold;
+}
+.list_action img{
+  box-shadow: 1px 1px 11px #2ecc71;
+}
+.list_action button{
+  margin: 10px;
+}

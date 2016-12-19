@@ -1,24 +1,50 @@
 <ion-menu [content]="content">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Menu</ion-title>
-    </ion-toolbar>
+  <ion-header class="header">
+    <img src="./assets/images/voz2.png"/>
   </ion-header>
 
   <ion-content>
-    <ion-list>
+    <ion-list class="list_action">
 
-      <!--<button></button>-->
-
-
-
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
+      <button ion-item>
+        <ion-avatar item-left>
+          <img src="./assets/images/map_icon.png" id="mapIcon" />
+        </ion-avatar>
+        <h2>Google Map</h2>
       </button>
+
+      <button ion-item>
+        <ion-avatar item-left>
+          <img src="./assets/images/search_icon2.svg"/>
+        </ion-avatar>
+        <h2>Search Another Place</h2>
+      </button>
+
+      <button ion-item>
+        <ion-avatar item-left>
+          <img src="./assets/images/move_icon.png"/>
+        </ion-avatar>
+        <h2>Move By</h2>
+      </button>
+
+      <button ion-item>
+        <ion-avatar item-left>
+          <img src="./assets/images/history_icon.png"/>
+        </ion-avatar>
+        <h2>History Search</h2>
+      </button>
+
     </ion-list>
   </ion-content>
 
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
-<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
+<ion-nav [root]="rootPage" #content swipeBackEnabled="false">
+</ion-nav>
+
+<!--<ion-tabs color="light">-->
+  <!--<ion-tab [root]="tabListATM" tabTitle="List" tabIcon="list"></ion-tab>-->
+  <!--<ion-tab [root]="tabMap" tabTitle="Map" tabIcon="navigate"></ion-tab>-->
+
+<!--</ion-tabs>-->
