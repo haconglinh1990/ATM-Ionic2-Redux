@@ -1,6 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import {Component, ViewChild} from '@angular/core';
+import {Nav} from 'ionic-angular';
 import { ListATM } from '../pages/list_atm/ListATM';
 import {MapPage} from "../pages/map/Map";
 
@@ -8,21 +7,15 @@ import {MapPage} from "../pages/map/Map";
   templateUrl: 'app.html'
 })
 export class MyApp {
-
+  //
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = ListATM;
-  tabMap: any = MapPage;
-  tabListATM: any = ListATM;
 
-  constructor(public platform: Platform) {
-    this.initializeApp();
+  constructor() {
   }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
-      StatusBar.styleDefault();
-      Splashscreen.hide();
-    });
+  goToMapPage(){
+    this.nav.push(MapPage);
   }
 }

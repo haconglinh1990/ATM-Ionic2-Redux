@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {NavController, Platform} from 'ionic-angular';
 import {LocationService} from "../../providers/LocationService";
 import {ATMLocation} from "../../models/ATMLocation";
-import {Geolocation, Geoposition} from 'ionic-native';
+import {Geolocation, Geoposition, StatusBar, Splashscreen} from 'ionic-native';
+import {MapPage} from "../map/Map";
 
 @Component({
   selector: 'page-page1',
@@ -12,38 +13,65 @@ import {Geolocation, Geoposition} from 'ionic-native';
 export class ListATM {
 
   searchQuery: string = '';
-  currentPosition: Geoposition;
+  currentLocation: Geoposition;
   isLoading: boolean = false;
   atmLocations: ATMLocation[] =[];
 
   constructor(public navCtrl: NavController,
-              private _locationService: LocationService) {
+              private _locationService: LocationService,
+              public platform: Platform) {
+
   }
 
-  ionViewDidLoad() {
-    this.getCurrentLocation();
+
+  ionViewDidLoad(){
+    this.initializeApp();
+  }
+
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      StatusBar.styleDefault();
+      Splashscreen.hide();
+      this.getCurrentLocation();
+    });
   }
 
   private getCurrentLocation(){
-    let geoOption = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true };
+
     this.isLoading = true;
+
+    let geoOption = { maximumAge: 30000, timeout: 50000, enableHighAccuracy: true };
+    // let geoOption = {enableHighAccuracy: true };
+
+    console.log("Before get Location first time !!!");
     Geolocation.getCurrentPosition(geoOption)
       .then((position: Geoposition) => {
-        this.currentPosition = position;
-        // this.fetchData(position, this.searchQuery);
-        // console.log("get Location first time");
-      }, (err) => console.log(err));
+        this.currentLocation = position;
 
-    Geolocation.watchPosition(geoOption)
-      .subscribe((positionUpdate: Geoposition) => {
-        this.currentPosition = positionUpdate;
-        this.fetchData(positionUpdate, this.searchQuery);
-        console.log("Watch Location first time");
-      }, (err) => console.log(err));
+        console.log("After get Location first time: " + position.coords.latitude + " + " + position.coords.longitude);
+        this.fetchData(this.currentLocation, this.searchQuery);
+
+      }, (err) => console.log(err))
+      .catch((error) => {
+      console.log('Error getting location', error);
+    });
+
+    // Geolocation.watchPosition(geoOption)
+    //   .subscribe((positionUpdate: Geoposition) => {
+    //     this.currentPosition = positionUpdate;
+    //     this.fetchData(positionUpdate.coords.latitude, positionUpdate.coords.longitude, this.searchQuery);
+    //     console.log("Watch Location first time");
+    //   }, (err) => console.log(err));
+
+
+    // this.fetchData(21.0129448, 105.81864979999999, this.searchQuery);
+
   }
 
-  fetchData(position: Geoposition, searchQuery: string){
-    this._locationService.getData(position.coords.latitude, position.coords.longitude, searchQuery)
+  fetchData(currentLocation: Geoposition, searchQuery: string){
+
+    this._locationService.getData(currentLocation, searchQuery)
       .subscribe((atmLocations: ATMLocation[]) =>{
         this.atmLocations = atmLocations;
         this.isLoading = false;
@@ -55,7 +83,17 @@ export class ListATM {
   searchResult() {
     while (this.isLoading === false){
       this.isLoading = true;
-      this.fetchData(this.currentPosition, this.searchQuery);
+      this.fetchData(this.currentLocation, this.searchQuery);
     }
+  }
+
+
+
+  mapDirection(atmLocation: ATMLocation){
+    this.navCtrl.push(MapPage, {
+      currentLocation: this.currentLocation,
+      targetLocation: atmLocation,
+      atmLocations: this.atmLocations
+    });
   }
 }

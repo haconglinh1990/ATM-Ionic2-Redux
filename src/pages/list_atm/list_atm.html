@@ -1,9 +1,11 @@
+
 <ion-header>
   <ion-navbar color = "secondary">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>List ATM</ion-title>
+
   </ion-navbar>
 </ion-header>
 
@@ -12,7 +14,7 @@
     <ion-spinner name="bubbles" color="danger" *ngIf="isLoading" text-center></ion-spinner>
   </div>
   <ion-list no-lines="true">
-    <ion-card *ngFor="let atmLocation of atmLocations">
+    <ion-card *ngFor="let atmLocation of atmLocations" (click) = "mapDirection(atmLocation)">
       <ion-item >
         <ion-avatar item-left>
           <img [src] = "atmLocation.urlImage" class="avataIcon"/>
@@ -30,5 +32,10 @@
     <ion-searchbar [(ngModel)]='searchQuery' (ionInput)="searchResult()"></ion-searchbar>
   </ion-toolbar>
 </ion-footer>
+
+
+
+
+
 
 

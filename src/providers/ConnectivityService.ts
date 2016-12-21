@@ -3,7 +3,7 @@ import {Platform} from "ionic-angular";
 import {Network} from "ionic-native";
 
 /*
-  Generated class for the ConnectionService provider.
+  Generated class for the ConnectivityService provider.
 
   See https://angular.io/docs/ts/latest/guide/dependency-injection.html
   for more info on providers and Angular 2 DI.
@@ -12,7 +12,7 @@ import {Network} from "ionic-native";
 declare var Connection;
 
 @Injectable()
-export class ConnectionService {
+export class ConnectivityService {
 
   onDevice: boolean;
 

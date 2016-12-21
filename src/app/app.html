@@ -1,12 +1,18 @@
+<!--<ion-tabs color="light">-->
+  <!--<ion-tab [root]="tabListATM" tabTitle="List" tabIcon="list"></ion-tab>-->
+  <!--<ion-tab [root]="tabMap" tabTitle="Map" tabIcon="navigate"></ion-tab>-->
+
+<!--</ion-tabs>-->
+
 <ion-menu [content]="content">
-  <ion-header class="header">
+  <ion-header id="header_menu">
     <img src="./assets/images/voz2.png"/>
   </ion-header>
 
   <ion-content>
-    <ion-list class="list_action">
+    <ion-list id="list_action">
 
-      <button ion-item>
+      <button menuClose ion-item (click)="goToMapPage()">
         <ion-avatar item-left>
           <img src="./assets/images/map_icon.png" id="mapIcon" />
         </ion-avatar>
@@ -40,11 +46,4 @@
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
-<ion-nav [root]="rootPage" #content swipeBackEnabled="false">
-</ion-nav>
-
-<!--<ion-tabs color="light">-->
-  <!--<ion-tab [root]="tabListATM" tabTitle="List" tabIcon="list"></ion-tab>-->
-  <!--<ion-tab [root]="tabMap" tabTitle="Map" tabIcon="navigate"></ion-tab>-->
-
-<!--</ion-tabs>-->
+<ion-nav #content [root]="rootPage" swipeBackEnabled="false"></ion-nav>

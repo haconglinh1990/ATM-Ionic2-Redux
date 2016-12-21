@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import {Observable} from "rxjs";
 import {RootObject, Result} from "../models/API";
 import {ATMLocation} from "../models/ATMLocation";
+import {Geoposition} from "ionic-native";
 
 /*
  Generated class for the LocationService provider.
@@ -17,29 +18,30 @@ export class LocationService {
   baseUrlPlace: string = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
   baseUrlImage: string = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=";
   radius: number = 50000;
-  apiKey: string = "AIzaSyAnsboAkwpEceSlixe4JrGKEOlhhWw1iTo";
+  apiKey2: string = "AIzaSyAnsboAkwpEceSlixe4JrGKEOlhhWw1iTo";
+  apiKey: string = "AIzaSyBsosxQolMICwQGG1StZoUd2qkhxqXZ1gs";
   next_page_token: string;
   isLoading: boolean = false;
 
   constructor(private _http: Http) {
   }
 
-  public getData(currentLat: number, currentLong: number, searchQuery: string): Observable<ATMLocation[]> {
+  public getData(currentPosition: Geoposition, searchQuery: string): Observable<ATMLocation[]> {
     let urlFirstData = this.baseUrlPlace +
-        "location=" + currentLat + "," + currentLong +
+        "location=" + currentPosition.coords.latitude +
+        "," + currentPosition.coords.longitude +
         "&radius=" + this.radius +
         "&type=atm" + "&keyword=" + searchQuery +
         "&key=" + this.apiKey;
-
-    console.log(urlFirstData);
-
+    //
+    // console.log(urlFirstData);
     return this._http.get(urlFirstData)
       .map((response: Response) => {
         this.next_page_token = response.json().next_page_token;
         return (<RootObject> response.json()).results
           .map((result: Result) => {
             // console.log(result.photos);
-            return this.mapDataToATMLocation(result, currentLat, currentLong);
+            return this.mapDataToATMLocation(result, currentPosition);
           }).sort((locationA, locationB) => {
             return locationA.distance - locationB.distance;
           })
@@ -50,16 +52,18 @@ export class LocationService {
       });
   }
 
-  private mapDataToATMLocation(result: Result, currentLat: number, currentLong: number): ATMLocation{
+  private mapDataToATMLocation(result: Result, currentPosition: Geoposition): ATMLocation{
 
     if(result.photos){
       // console.log(this.baseUrlImage + result.photos[0].photo_reference + "&key=" + this.apiKey);
       return new ATMLocation({
         name: result.name,
         address: result.vicinity,
-        distance: this.distanceBetweenPoints(
-          currentLat,
-          currentLong,
+        positionLat: result.geometry.location.lat,
+        positionLong: result.geometry.location.lng,
+        distance: this.distanceBetweenTwoPoint(
+          currentPosition.coords.latitude,
+          currentPosition.coords.longitude,
           result.geometry.location.lat,
           result.geometry.location.lng),
         urlImage: this.baseUrlImage + result.photos[0].photo_reference + "&key=" + this.apiKey
@@ -68,39 +72,20 @@ export class LocationService {
       return new ATMLocation({
         name: result.name,
         address: result.vicinity,
-        distance: this.distanceBetweenPoints(
-          currentLat,
-          currentLong,
+        positionLat: result.geometry.location.lat,
+        positionLong: result.geometry.location.lng,
+        distance: this.distanceBetweenTwoPoint(
+          currentPosition.coords.latitude,
+          currentPosition.coords.longitude,
           result.geometry.location.lat,
           result.geometry.location.lng),
-        urlImage: "http://sohanews.sohacdn.com/thumb_w/660/2016/atm-1467601526645-0-13-978-1930-crop-1467601567798.jpg"
+        urlImage: "https://sohanews.sohacdn.com/thumb_w/660/2016/atm-1467601526645-0-13-978-1930-crop-1467601567798.jpg"
       });
     }
-
-
-
-    // console.log(result);
-    //
-    // this.photos = result.photos;
-
-    //
-    // console.log(result.photos);
-    //
-    // // let urlImageReference: string = result.photos[0].photo_reference;
-    //
-    // console.log("Reference = " + urlImageReference);
-    //
-
-    // var urlImage: string = this.baseUrlImage + this.photos[0].photo_reference + "&key=" + this.apiKey;
-
-    // console.log("URL = " + urlImage);
-
-
-
   }
 
 
-  private distanceBetweenPoints(lat1: number, lon1: number, lat2: number, lon2: number) {
+  private distanceBetweenTwoPoint(lat1: number, lon1: number, lat2: number, lon2: number) {
     var radlat1 = Math.PI * lat1/180
     var radlat2 = Math.PI * lat2/180
     var theta = lon1-lon2
